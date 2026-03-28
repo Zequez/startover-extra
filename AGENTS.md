@@ -1,0 +1,5 @@
+- Use PNPM
+- Use WXT web extension framework
+- Target is only Firefox MV2
+- Svelte is available
+- Tailwind classes are available an preferable for styling

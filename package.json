@@ -32,6 +32,7 @@
     "@tailwindcss/vite": "4.1.18",
     "@tsconfig/svelte": "^5.0.6",
     "@types/chrome": "^0.1.32",
+    "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-svelte": "^2.0.4",
     "prettier": "^3.7.4",
     "prettier-plugin-svelte": "^3.4.1",

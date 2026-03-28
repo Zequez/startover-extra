@@ -9,19 +9,26 @@ export default defineConfig({
   webExt: {
     disabled: true,
   },
-  modules: ["@wxt-dev/module-svelte"],
+  modules: ["@wxt-dev/module-svelte", "@wxt-dev/auto-icons"],
   manifest: {
     name: "Startover Extra",
     description: "Offline backup and browser for Startover.xyz",
-    permissions: ["storage"],
+    permissions: ["storage", "tabs", "<all_urls>"],
     web_accessible_resources: [
       {
         resources: ["dashboard.html"],
         matches: ["*://*/*"],
       },
+      {
+        resources: ["sidepanel.html"],
+        matches: ["*://*/*"],
+      },
     ],
+    side_panel: {
+      default_path: "sidepanel.html",
+    },
     action: {
-      default_title: "Open Side Panel",
+      default_title: "Open Startover Sidebar",
     },
   },
   vite: () => ({
