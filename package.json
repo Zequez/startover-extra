@@ -1,15 +1,12 @@
 {
-  "name": "chrome-tabs-extension",
-  "description": "A starter template for building browser extensions with Svelte 5, Tailwind 4, and WXT",
+  "name": "startover-extra",
+  "description": "A Firefox extension for extracting Startover from Strikingly for offline, off-platform use.",
   "private": true,
   "version": "0.0.1",
   "keywords": [
     "wxt",
     "svelte",
-    "svelte-5",
     "tailwind",
-    "tailwind-4",
-    "browser-extension",
     "firefox-extension",
     "extension"
   ],
