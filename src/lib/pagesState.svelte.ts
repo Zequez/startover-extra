@@ -10,66 +10,33 @@ export function initPagesState() {
     "https://4feelings.mystrikingly.com/",
   ]);
 
-  const pagesDiscovery = lsState<{ [key: string]: string[] }>(
-    "pagesDiscovery",
-    {
-      "https://4feelings.mystrikingly.com/": [],
-      "https://spaceport.mystrikingly.com/": [],
-    },
-  );
+  const REFERENCE = "https://spaceport.mystrikingly.com/";
 
-  function processPages(fromUrl: string, nextPages: string[]) {
-    const normalizedFromUrl = normalizeMyStrikinglyUrl(fromUrl);
-
-    if (normalizedFromUrl == null) {
-      return;
-    }
-
-    addPage(normalizedFromUrl);
-    ensureDiscoveryBucket(normalizedFromUrl);
-
-    for (const page of nextPages) {
-      const normalizedPage = normalizeMyStrikinglyUrl(page);
-
-      if (normalizedPage == null) {
-        continue;
+  function setPagesList(pagesList: string[]) {
+    const normalizedPagesList = pagesList
+      .map(normalizeMyStrikinglyUrl)
+      .filter((a) => a)
+      .sort() as string[];
+    pages.splice(0, pages.length);
+    normalizedPagesList.forEach((page) => {
+      if (!pages.includes(page)) {
+        pages.push(page);
       }
+    });
 
-      addPage(normalizedPage);
-      ensureDiscoveryBucket(normalizedPage);
-
-      if (pagesDiscovery[normalizedFromUrl].includes(normalizedPage)) {
-        continue;
-      }
-
-      pagesDiscovery[normalizedFromUrl].push(normalizedPage);
-    }
-  }
-
-  function addPage(page: string) {
-    if (pages.includes(page)) {
-      return;
-    }
-
-    pages.push(page);
-  }
-
-  function ensureDiscoveryBucket(page: string) {
-    if (page in pagesDiscovery) {
-      return;
-    }
-
-    pagesDiscovery[page] = [];
+    console.log("SETTING PAGES", normalizedPagesList);
   }
 
   return {
+    rootPage: REFERENCE,
     get pages() {
       return pages;
     },
-    get pagesDiscovery() {
-      return pagesDiscovery;
-    },
-    processPages,
+    // get pagesDiscovery() {
+    //   return pagesDiscovery;
+    // },
+    setPagesList,
+    // processPages,
     normalizePage: normalizeMyStrikinglyUrl,
     pageToName: extractMyStrikinglyPageName,
   };

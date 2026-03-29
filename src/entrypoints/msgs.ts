@@ -1,9 +1,11 @@
 import { defineUnlistedScript } from "wxt/utils/define-unlisted-script";
 import type { PageArchiveSummary } from "@/lib/pageArchiveDb";
 
-export type ToPageMsg = {
-  id: "analyze";
-};
+export type ToPageMsg =
+  | {
+      id: "analyze";
+    }
+  | { id: "fetch-links" };
 
 export type FromPageMsg =
   | {
@@ -11,6 +13,7 @@ export type FromPageMsg =
       from: string;
       links: string[];
     }
+  | { id: "page-ready"; from: string }
   | {
       id: "archive-start";
       archiveId: string;

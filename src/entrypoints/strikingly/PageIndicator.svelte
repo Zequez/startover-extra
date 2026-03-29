@@ -14,7 +14,7 @@
   let lastArchivedAt = $state<string | null>(null);
   let errorMessage = $state<string | null>(null);
 
-  function collectLinks(): FromPageMsg {
+  function collectLinks() {
     const links = Array.from(
       document.querySelectorAll<HTMLAnchorElement>("a[href]"),
     )
@@ -25,11 +25,14 @@
       id: "links",
       from: document.location.href.split("#")[0],
       links,
-    };
+    } satisfies FromPageMsg;
   }
 
   async function handleMessage(message: ToPageMsg) {
     switch (message.id) {
+      case "fetch-links":
+        port.postMessage(collectLinks());
+        break;
       case "analyze":
         await analyzePage();
         break;
@@ -43,7 +46,6 @@
 
     isAnalyzing = true;
     errorMessage = null;
-    port.postMessage(collectLinks());
 
     const from = document.location.href.split("#")[0];
     const canonizedUrl = normalizeMyStrikinglyUrl(from) ?? from;
@@ -124,6 +126,21 @@
 
     port.onMessage.addListener(onMessage);
 
+    // waitUntilLinks(() => {
+    //   port.postMessage({
+    //     id: "page-ready",
+    //     from: document.location.href.split("#")[0],
+    //   } satisfies FromPageMsg);
+    // });
+
+    window.addEventListener("load", () => {
+      console.log("PAGE FULLY LOADED");
+      port.postMessage({
+        id: "page-ready",
+        from: document.location.href.split("#")[0],
+      } satisfies FromPageMsg);
+    });
+
     return () => {
       port.onMessage.removeListener(onMessage);
     };
@@ -140,6 +157,28 @@
 
   function toErrorMessage(error: unknown) {
     return error instanceof Error ? error.message : String(error);
+  }
+
+  async function waitUntilLinks(cb: () => void) {
+    window.addEventListener("load", () => {
+      console.log("Everything loaded");
+      cb();
+    });
+
+    // while (true) {
+    //   const { links } = collectLinks();
+    //   if (links.length > 500) {
+    //     cb();
+    //     break;
+    //   }
+    //   await wait(100);
+    // }
+  }
+
+  async function wait(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 </script>
 

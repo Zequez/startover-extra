@@ -28,6 +28,7 @@ export function extractNavDataAndTheme(
     return null;
   }
 
+  const docLoc = document.location.href.split("#")[0];
   const navList = topBar.querySelector(".s-uncollapsed-nav, .s-nav-items");
   const linkItems = Array.from(navList?.children ?? []) as HTMLLIElement[];
   const links = linkItems
@@ -38,7 +39,11 @@ export function extractNavDataAndTheme(
       label: cleanText(link.textContent),
       href: link.href,
     }))
-    .filter((link) => link.label.length > 0);
+    .filter((link) => link.label.length > 0)
+    .map(({ label, href }) => ({
+      label,
+      href: href.startsWith(docLoc) ? href.replace(docLoc, "") : href,
+    }));
 
   const navButtonEl =
     topBar.querySelector<HTMLAnchorElement>(".s-nav-btn a[href]");
@@ -100,8 +105,7 @@ function getContrastingTextColor(backgroundColor: string | null) {
     return "#111827";
   }
 
-  const luminance =
-    (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
+  const luminance = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
 
   return luminance > 0.55 ? "#111827" : "#ffffff";
 }

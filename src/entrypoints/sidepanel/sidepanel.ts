@@ -1,4 +1,4 @@
-import "../../app.css";
+import "virtual:uno.css";
 import Dashboard from "./Sidepanel.svelte";
 import { mount } from "svelte";
 
